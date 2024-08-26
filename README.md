@@ -31,7 +31,7 @@ brew install duckdb
 Clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/yawmak.git
+git clone https://github.com/unixtime/yawmak.git
 cd yawmak
 ```
 
@@ -242,7 +242,7 @@ If you want to contribute or modify the project, follow these steps:
 ### Clone the Repository:
 
 ```bash
-git clone https://github.com/your-username/yawmak.git
+git clone https://github.com/unixtime/yawmak.git
 cd yawmak
 ```
 
