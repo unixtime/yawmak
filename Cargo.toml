@@ -1,0 +1,25 @@
+[package]
+name = "yawmak"
+version = "0.1.0"
+authors = ["Hassan El-Masri <hassan@unixtime.com>"]
+edition = "2021"
+
+[dependencies]
+# For parsing command-line arguments
+clap = { version = "4.5.16", features = ["derive"] }
+
+# For command autocomplete
+clap_complete = "4.5.23"
+
+# For DuckDB database integration
+duckdb = "1.0.0"
+
+# For handling date and time
+chrono = { version = "0.4.38", features = ["serde"] }
+
+# For creating a text-based user interface
+prettytable-rs = "0.10.0"
+
+# For serialization and deserialization
+serde = { version = "1.0.209", features = ["derive"] }
+serde_json = "1.0.127"
