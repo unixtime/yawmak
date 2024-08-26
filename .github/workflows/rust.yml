@@ -19,8 +19,10 @@ jobs:
 
     - name: Install DuckDB
       run: |
-        sudo apt-get update
-        sudo apt-get install -y duckdb
+        wget https://github.com/duckdb/duckdb/releases/download/v1.0.0/duckdb_cli-linux-amd64.zip
+        unzip duckdb_cli-linux-amd64.zip
+        sudo mv duckdb /usr/local/bin/duckdb
+        sudo chmod +x /usr/local/bin/duckdb
 
     - name: Build
       run: cargo build --verbose
