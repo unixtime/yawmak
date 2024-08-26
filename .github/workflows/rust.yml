@@ -17,15 +17,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install DuckDB
+    - name: Install DuckDB CLI and Libraries
       run: |
         wget https://github.com/duckdb/duckdb/releases/download/v1.0.0/duckdb_cli-linux-amd64.zip
         unzip duckdb_cli-linux-amd64.zip
-        sudo mv duckdb /usr/local/bin/duckdb
-        sudo chmod +x /usr/local/bin/duckdb
+        wget https://github.com/duckdb/duckdb/releases/download/v1.0.0/libduckdb-linux-amd64.zip
+        unzip libduckdb-linux-amd64.zip
+        sudo mv libduckdb.so /usr/local/lib/
+        sudo mv duckdb /usr/local/bin/
+        sudo ldconfig  # Refresh shared library cache
 
     - name: Build
+      env:
+        LD_LIBRARY_PATH: /usr/local/lib
       run: cargo build --verbose
 
     - name: Run tests
+      env:
+        LD_LIBRARY_PATH: /usr/local/lib
       run: cargo test --verbose
