@@ -490,7 +490,15 @@ mod tests {
     use chrono::NaiveDate;
 
     fn setup_test_db() -> Database {
-        Database::new(":memory:").unwrap()
+        let db = Database::new(":memory:").unwrap();
+
+        // Install and load the necessary extensions for testing
+        db.conn.execute("INSTALL 'excel';", []).unwrap();
+        db.conn.execute("LOAD 'excel';", []).unwrap();
+        db.conn.execute("INSTALL 'spatial';", []).unwrap();
+        db.conn.execute("LOAD 'spatial';", []).unwrap();
+
+        db
     }
 
     #[test]
