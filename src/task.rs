@@ -1,7 +1,7 @@
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone)] // Add Clone here
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Task {
     pub id: i32,
     pub name: String,
@@ -10,7 +10,7 @@ pub struct Task {
     pub done: bool,
     pub due_date: Option<NaiveDate>,
     pub completion_date: Option<NaiveDate>,
-    pub priority: i32, // New field for priority
+    pub priority: i32,
 }
 
 impl Task {
@@ -30,7 +30,7 @@ impl Task {
             done: false,
             due_date: due_date_parsed,
             completion_date: None,
-            priority, // Initialize priority
+            priority,
         }
     }
 }

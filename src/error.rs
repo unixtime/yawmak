@@ -12,8 +12,15 @@ pub enum TodoError {
 impl fmt::Display for TodoError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            TodoError::DuckDB(err) => write!(f, "DuckDB error: {}", err),
-            TodoError::Io(err) => write!(f, "IO error: {}", err),
+            TodoError::DuckDB(err) => {
+                // Customize the error message based on DuckDB error details
+                if err.to_string().contains("GDAL Error") {
+                    write!(f, "There was an issue with file access: {}. Please ensure the file exists and the path is correct.", err)
+                } else {
+                    write!(f, "A database error occurred: {}. Please ensure your database setup is correct.", err)
+                }
+            },
+            TodoError::Io(err) => write!(f, "There was an input/output error: {}. Please check your file paths and permissions.", err),
             TodoError::Custom(msg) => write!(f, "{}", msg),
         }
     }

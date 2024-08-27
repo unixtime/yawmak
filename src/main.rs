@@ -23,7 +23,7 @@ use std::process;
 
 fn main() {
     if let Err(e) = run() {
-        eprintln!("Error: {}", e);
+        eprintln!("Oops! Something went wrong: {}", e);
         process::exit(1);
     }
 }
@@ -324,7 +324,7 @@ fn handle_add(conn: &Database, sub_m: &clap::ArgMatches) {
         .unwrap()
         .parse()
         .unwrap_or_else(|_| {
-            eprintln!("Invalid priority value. Please enter a valid integer.");
+            eprintln!("It looks like the priority value you entered isn't a number. Please provide a valid integer (e.g., 1, 2, 3).");
             process::exit(1);
         });
 
@@ -347,7 +347,7 @@ fn handle_done(conn: &Database, sub_m: &clap::ArgMatches) {
         .unwrap()
         .parse::<i32>()
         .unwrap_or_else(|_| {
-            eprintln!("Invalid ID format. Please enter a valid integer.");
+            eprintln!("The ID you entered doesn't seem to be valid. Please enter a number, like 1 or 2, and try again.");
             process::exit(1);
         });
     if let Err(e) = conn.mark_task_done(id) {
@@ -361,7 +361,7 @@ fn handle_update(conn: &Database, sub_m: &clap::ArgMatches) {
         .unwrap()
         .parse::<i32>()
         .unwrap_or_else(|_| {
-            eprintln!("Invalid ID format. Please enter a valid integer.");
+            eprintln!("The ID you entered doesn't seem to be valid. Please enter a number, like 1 or 2, and try again.");
             process::exit(1);
         });
 
@@ -545,11 +545,16 @@ fn handle_export(conn: &Database, sub_m: &clap::ArgMatches) -> Result<(), TodoEr
 
 fn handle_db_error(e: TodoError) {
     let error_message = e.to_string().to_lowercase();
-    if error_message.contains("constraint") {
-        println!("Error: Constraint violation occurred. Ensure the data does not already exist.");
+
+    if error_message.contains("no such file or directory") {
+        println!("It seems the file you're trying to import was not found. Please check the file path and try again.");
+    } else if error_message.contains("constraint") {
+        println!("Oops! It seems like you're trying to add something that already exists. Please check your data and try again.");
     } else if error_message.contains("foreign key") {
-        println!("Error: Foreign key violation. Ensure the item is not in use elsewhere.");
+        println!("Hmm, it looks like this item is still linked to something else. Please ensure it's not in use elsewhere before deleting.");
+    } else if error_message.contains("gdal error") {
+        println!("There was an issue opening the file with GDAL. Please ensure the file exists and you have the necessary permissions.");
     } else {
-        println!("An unexpected error occurred: {}", e);
+        println!("An unexpected error occurred: {}. Please try again or check the documentation for more details.", e);
     }
 }
