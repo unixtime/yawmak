@@ -314,17 +314,20 @@ fn handle_add(conn: &Database, sub_m: &clap::ArgMatches) {
         .get_one::<String>("category")
         .unwrap_or(&"General".to_string())
         .to_string();
+
+    // Correctly split the tags by comma
     let tags: Vec<String> = sub_m
         .get_many::<String>("tags")
         .unwrap_or_default()
-        .map(|v| v.to_string())
+        .flat_map(|v| v.split(',').map(|s| s.trim().to_string()))
         .collect();
+
     let priority: i32 = sub_m
         .get_one::<String>("priority")
         .unwrap()
         .parse()
         .unwrap_or_else(|_| {
-            eprintln!("It looks like the priority value you entered isn't a number. Please provide a valid integer (e.g., 1, 2, 3).");
+            eprintln!("Invalid priority value. Please enter a valid integer.");
             process::exit(1);
         });
 

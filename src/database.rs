@@ -205,6 +205,7 @@ impl Database {
                 .map_err(TodoError::from)?;
         }
 
+        // Insert each tag separately
         for tag in &task.tags {
             self.add_tag(tag)?;
             let tag_id = self.get_tag_id(tag)?;
