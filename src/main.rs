@@ -94,6 +94,9 @@ fn run() -> Result<(), TodoError> {
     Ok(())
 }
 
+
+
+
 fn build_cli() -> Command {
     Command::new("yawmak")
         .version("1.0")
@@ -345,39 +348,39 @@ fn handle_list(conn: &Database, sub_m: &clap::ArgMatches) -> Result<(), TodoErro
 }
 
 fn handle_done(conn: &Database, sub_m: &clap::ArgMatches) {
-    let id = sub_m
-        .get_one::<String>("ID")
-        .unwrap()
-        .parse::<i32>()
-        .unwrap_or_else(|_| {
-            eprintln!("The ID you entered doesn't seem to be valid. Please enter a number, like 1 or 2, and try again.");
-            process::exit(1);
-        });
+    let id = parse_id(sub_m);
     if let Err(e) = conn.mark_task_done(id) {
         handle_db_error(e);
     }
 }
 
-fn handle_update(conn: &Database, sub_m: &clap::ArgMatches) {
-    let id = sub_m
+// Common function to handle updating tasks
+fn parse_id(sub_m: &clap::ArgMatches) -> i32 {
+    sub_m
         .get_one::<String>("ID")
         .unwrap()
         .parse::<i32>()
         .unwrap_or_else(|_| {
             eprintln!("The ID you entered doesn't seem to be valid. Please enter a number, like 1 or 2, and try again.");
             process::exit(1);
-        });
+        })
+}
 
-    let new_task = sub_m.get_one::<String>("TASK").map(|d| d.to_string());
-    let new_due_date = sub_m.get_one::<String>("DUE_DATE").map(|d| {
-        // Validate date format
+fn parse_due_date(due_date: Option<&String>) -> Option<String> {
+    due_date.map(|d| {
         if NaiveDate::parse_from_str(d, "%Y-%m-%d").is_err() {
             eprintln!("Invalid date format. Please use YYYY-MM-DD.");
             process::exit(1);
         }
         d.to_string()
-    });
+    })
+}
 
+
+fn handle_update(conn: &Database, sub_m: &clap::ArgMatches) {
+    let id = parse_id(sub_m);
+    let new_task = sub_m.get_one::<String>("TASK").map(|d| d.to_string());
+    let new_due_date = parse_due_date(sub_m.get_one::<String>("DUE_DATE"));
     let new_category = sub_m.get_one::<String>("category").map(|d| d.to_string());
     let new_tags: Vec<String> = sub_m
         .get_many::<String>("tags")
