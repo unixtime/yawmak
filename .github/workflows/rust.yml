@@ -29,10 +29,12 @@ jobs:
 
     - name: Build
       env:
+        RUSTFLAGS: "-C link-arg=-lstdc++"
         LD_LIBRARY_PATH: /usr/local/lib
       run: cargo build --verbose
 
     - name: Run tests
       env:
+        RUSTFLAGS: "-C link-arg=-lstdc++"
         LD_LIBRARY_PATH: /usr/local/lib
       run: cargo test --verbose
