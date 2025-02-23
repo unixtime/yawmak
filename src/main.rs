@@ -94,12 +94,9 @@ fn run() -> Result<(), TodoError> {
     Ok(())
 }
 
-
-
-
 fn build_cli() -> Command {
     Command::new("yawmak")
-        .version("1.0")
+        .version("1.1.2")
         .author("Hassan El-Masri <hassan@unixtime.com>")
         .about("Manages your todos")
         .subcommand(
@@ -551,16 +548,20 @@ fn handle_export(conn: &Database, sub_m: &clap::ArgMatches) -> Result<(), TodoEr
 
 fn handle_db_error(e: TodoError) {
     let error_message = e.to_string().to_lowercase();
+    let known_errors = [
+        ("no such file or directory", "File not found. Check the path and try again."),
+        ("constraint", "This item already exists. Please check your input."),
+        ("foreign key", "Item is still in use. Ensure it is not linked elsewhere."),
+        ("gdal error", "GDAL issue occurred. Check file permissions and existence."),
+    ];
 
-    if error_message.contains("no such file or directory") {
-        println!("It seems the file you're trying to import was not found. Please check the file path and try again.");
-    } else if error_message.contains("constraint") {
-        println!("Oops! It seems like you're trying to add something that already exists. Please check your data and try again.");
-    } else if error_message.contains("foreign key") {
-        println!("Hmm, it looks like this item is still linked to something else. Please ensure it's not in use elsewhere before deleting.");
-    } else if error_message.contains("gdal error") {
-        println!("There was an issue opening the file with GDAL. Please ensure the file exists and you have the necessary permissions.");
-    } else {
-        println!("An unexpected error occurred: {}. Please try again or check the documentation for more details.", e);
+    for (pattern, message) in &known_errors {
+        if error_message.contains(pattern) {
+            println!("{}", message);
+            return;
+        }
     }
+
+    println!("Unexpected error occurred: {}. Please check the logs.", e);
 }
+

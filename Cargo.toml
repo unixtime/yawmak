@@ -1,24 +1,24 @@
 [package]
 name = "yawmak"
-version = "0.1.1"
+version = "1.1.2"
 authors = ["Hassan El-Masri <hassan@unixtime.com>"]
 edition = "2021"
 
 [dependencies]
 # For parsing command-line arguments
-clap = { version = "4.5.21", features = ["derive"] }
+clap = { version = "4.5.29", features = ["derive"] }
 
 # For command autocomplete
-clap_complete = "4.5.38"
+clap_complete = "4.5.44"
 
-# For DuckDB database integration
-duckdb = "1.1.1"
+# For DuckDB database integration and extensions
+duckdb = { version = "1.2.0", features = ["extensions-full"] }
 
 # For handling date and time
-chrono = { version = "0.4.38", features = ["serde"] }
+chrono = { version = "0.4.39", features = ["serde"] }
 
 # For creating a text-based user interface
 prettytable-rs = "0.10.0"
 
 # For serialization and deserialization
-serde = { version = "1.0.215", features = ["derive"] }
+serde = { version = "1.0.217", features = ["derive"] }
