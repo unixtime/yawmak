@@ -22,3 +22,6 @@ prettytable-rs = "0.10.0"
 
 # For serialization and deserialization
 serde = { version = "1.0.217", features = ["derive"] }
+
+[package.metadata.cargo-apk]
+native-libraries = ["stdc++"]
